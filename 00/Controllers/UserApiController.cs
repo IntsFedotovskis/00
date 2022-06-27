@@ -14,18 +14,19 @@ namespace _00.Controllers
     {
         static readonly HttpClient Client = new HttpClient();
 
-      //  [HttpGet]
-      //  public async Task<List<Holiday>> GetHolidays(string countryCode, int year)
-     //   {
-     //       List<Holiday> _holidays = null;
-     //       var URL = $"https://date.nager.at/api/v1/Get/{countryCode}/{year}";
-      //      string responseBody = await Client.GetStringAsync(URL);
-    //        _holidays = JsonConvert.DeserializeObject<List<Holiday>>(responseBody);
-    //        return _holidays;
-    //    }
+        //  [HttpGet]
+        //  public async Task<List<Holiday>> GetHolidays(string countryCode, int year)
+        //   {
+        //       List<Holiday> _holidays = null;
+        //       var URL = $"https://date.nager.at/api/v1/Get/{countryCode}/{year}";
+        //      string responseBody = await Client.GetStringAsync(URL);
+        //        _holidays = JsonConvert.DeserializeObject<List<Holiday>>(responseBody);
+        //        return _holidays;
+        //    }
 
         [HttpGet]
-        public async Task<List<Result>> GetHolidays(string countryCodeForFirstCountry, string countryCodeForSecondCountry, int year)
+        public async Task<List<Result>> GetHolidays(string countryCodeForFirstCountry,
+            string countryCodeForSecondCountry, int year)
         {
             List<Result> _holidays = new List<Result>();
             var firstUrl = $"https://date.nager.at/api/v1/Get/{countryCodeForFirstCountry}/{year}";
@@ -35,11 +36,11 @@ namespace _00.Controllers
             List<Holiday> firstCountryHolidays = JsonConvert.DeserializeObject<List<Holiday>>(firstResponseBody);
             List<Holiday> secondCountryHolidays = JsonConvert.DeserializeObject<List<Holiday>>(secondResponseBody);
             var bothCountryHolidays = firstCountryHolidays.Concat(secondCountryHolidays).ToList();
-            for (int i = 0; i <= bothCountryHolidays.Count-1; i++)
+            for (int i = 0; i <= bothCountryHolidays.Count - 1; i++)
             {
-                foreach (var holiday in bothCountryHolidays)
+                foreach (Holiday holiday in bothCountryHolidays)
                 {
-                    if (bothCountryHolidays[i].Name == holiday.Name)
+                    if (bothCountryHolidays[i].Name == holiday.Name && bothCountryHolidays[i].LocalName != holiday.LocalName)
                     {
                         _holidays.Add(new Result()
                         {
@@ -50,11 +51,11 @@ namespace _00.Controllers
                                 bothCountryHolidays[i].LocalName,
                                 holiday.LocalName
                             }
-
                         });
                     }
                 }
             }
+
             return _holidays;
         }
     }
