@@ -8,7 +8,7 @@ namespace _00.Models
     public class Result
     {
         public string Date { get; set; }
-        public string LocalName { get; set; }
+        public List<string> LocalName { get; set; }
         public string Name { get; set; }
     }
 }

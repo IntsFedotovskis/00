@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net.Http;
 using System.Threading.Tasks;
 using _00.Models;
-using _00.Storage;
-using Microsoft.Extensions.Logging.Abstractions;
 using Newtonsoft.Json;
 
 namespace _00.Controllers
@@ -37,13 +35,23 @@ namespace _00.Controllers
             List<Holiday> firstCountryHolidays = JsonConvert.DeserializeObject<List<Holiday>>(firstResponseBody);
             List<Holiday> secondCountryHolidays = JsonConvert.DeserializeObject<List<Holiday>>(secondResponseBody);
             var bothCountryHolidays = firstCountryHolidays.Concat(secondCountryHolidays).ToList();
-            for (int i = 0; i < bothCountryHolidays.Count-1; i++)
+            for (int i = 0; i <= bothCountryHolidays.Count-1; i++)
             {
                 foreach (var holiday in bothCountryHolidays)
                 {
                     if (bothCountryHolidays[i].Name == holiday.Name)
                     {
-                        _holidays.Add(HolidayStorage.ConvertToResult(bothCountryHolidays[i]));
+                        _holidays.Add(new Result()
+                        {
+                            Name = bothCountryHolidays[i].Name,
+                            Date = bothCountryHolidays[i].Date,
+                            LocalName = new List<string>()
+                            {
+                                bothCountryHolidays[i].LocalName,
+                                holiday.LocalName
+                            }
+
+                        });
                     }
                 }
             }
